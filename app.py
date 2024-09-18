@@ -1,13 +1,5 @@
 import streamlit as st
-import os
 from llama_index.core import StorageContext, load_index_from_storage
-
-
-with st.sidebar:
-    openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
-    "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
-
-
 
 # rebuild storage context
 storage_context = StorageContext.from_defaults(persist_dir="storage")
@@ -31,11 +23,7 @@ def handle_prompt(prompt):
     global index
     global chat_engine
 
-    if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
     if not index:
-        os.environ['OPENAI_API_KEY'] = openai_api_key
         index = load_index_from_storage(storage_context)
         chat_engine = index.as_chat_engine()
 
@@ -47,7 +35,7 @@ def handle_prompt(prompt):
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
-        streaming_response = chat_engine.stream_chat(prompt)
+        streaming_response = chat_engine.stream_chat(prompt + ". Please provide detailed examples and assume that I am a beginner. Return the context that I have provided as part of your response.")
         response = st.write_stream(streaming_response.response_gen)
         
     # Add assistant response to chat history
