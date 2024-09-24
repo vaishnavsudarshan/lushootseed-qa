@@ -1,6 +1,25 @@
 import streamlit as st
 from llama_index.core import StorageContext, load_index_from_storage
 
+
+doc_to_url = {'dəxʷtulalikʷ-rev.-5_23.pdf': 'https://tulaliplushootseed.com/wp-content/uploads/2023/03/d%C9%99x%CA%B7tulalik%CA%B7-rev.-5_23.pdf'}
+
+doc_to_name = {'dəxʷtulalikʷ-rev.-5_23.pdf': 'Conversational Lushootseed'}
+
+def nodes_to_markdown(nodes):
+    markdown = []
+    for node in nodes:
+        if (file_name := node.metadata.get('file_name')) in doc_to_name:
+            if 'page_label' in node.metadata:
+                link_name = doc_to_name[file_name] + ', page ' + node.metadata['page_label']
+                link_url = doc_to_url[file_name] + '#page=' + node.metadata['page_label']
+            else:
+                link_name = doc_to_name[file_name]
+                link_url = doc_to_url[file_name]
+            markdown.append(f'[{link_name}]({link_url})')
+    return ', '.join(markdown)
+
+
 # rebuild storage context
 storage_context = StorageContext.from_defaults(persist_dir="storage")
 
@@ -15,6 +34,7 @@ if "messages" not in st.session_state:
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
+
 
 index = None
 chat_engine = None
@@ -37,6 +57,12 @@ def handle_prompt(prompt):
     with st.chat_message("assistant"):
         streaming_response = chat_engine.stream_chat(prompt + ". Please provide detailed examples and assume that I am a beginner. Return the context that I have provided as part of your response.")
         response = st.write_stream(streaming_response.response_gen)
+        context_md = nodes_to_markdown(streaming_response.source_nodes)
+        if context_md:
+            context = 'Please see these links for additional information: ' + context_md
+            st.markdown(context)
+            response += context
+            
         
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
