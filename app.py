@@ -56,7 +56,7 @@ def handle_prompt(prompt):
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
-        streaming_response = chat_engine.stream_chat(prompt + ". Please provide detailed examples and assume that I am a beginner. However, you should still ask me if I am a beginner or advanced after I ask 3 questions. Return the context that I have provided as part of your response.")
+        streaming_response = chat_engine.stream_chat(prompt + ". Please provide detailed examples and assume that I am a beginner. However, you should still ask me if I am a beginner or advanced when we first start the conversation. Return the context that I have provided as part of your response.")
         response = st.write_stream(streaming_response.response_gen)
         context_md = nodes_to_markdown(streaming_response.source_nodes)
         if context_md:
