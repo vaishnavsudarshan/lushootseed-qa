@@ -56,7 +56,7 @@ def handle_prompt(prompt):
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
-        streaming_response = chat_engine.stream_chat(prompt + ". Please provide detailed examples and assume that I am a beginner. Return the context that I have provided as part of your response.")
+        streaming_response = chat_engine.stream_chat(prompt + ". Please provide detailed examples and assume that I am a beginner. However, you should still ask me if I am a beginner or advanced after I ask 3 questions. Return the context that I have provided as part of your response.")
         response = st.write_stream(streaming_response.response_gen)
         context_md = nodes_to_markdown(streaming_response.source_nodes)
         if context_md:
@@ -69,7 +69,7 @@ def handle_prompt(prompt):
     st.session_state.messages.append({"role": "assistant", "content": response})
 
 
-prebaked_prompts = ['How do I introduce myself', 'How do I ask your name', 'How do I count from 1 to 10']
+prebaked_prompts = ['How do I introduce myself', 'How do I ask your name', 'How do I count from 1 to 10', 'How do I name common foods from the Pacific Northwest', 'Explain in detail how Lushootseed grammar works, like verb conjugations and sentence structure.']
 
 cols = st.columns(len(prebaked_prompts))
 
