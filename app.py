@@ -25,7 +25,7 @@ storage_context = StorageContext.from_defaults(persist_dir="storage")
 
 st.title("Welcome to your dxʷləšucid chatbot!")
 st.header("You can ask me questions about conversing in Lushootseed or click on one of the buttons containing common questions")
-st.info("I am still under development so my answers might always be accurate. Please visit https://tulaliplushootseed.com/ for more Lushootseed learning resources!")
+st.info("I am still under development so my answers might not always be accurate. Please visit https://tulaliplushootseed.com/ for more Lushootseed learning resources!")
 
 # Initialize chat history
 if "messages" not in st.session_state:
